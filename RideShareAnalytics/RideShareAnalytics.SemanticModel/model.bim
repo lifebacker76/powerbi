@@ -1,0 +1,903 @@
+{
+  "compatibilityLevel": 1567,
+  "model": {
+    "culture": "en-US",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "ExcelFilePath",
+        "lineageTag": "00000001-0001-0001-0001-000000000001",
+        "isHidden": true,
+        "columns": [
+          {
+            "name": "ExcelFilePath",
+            "dataType": "string",
+            "sourceColumn": "ExcelFilePath",
+            "lineageTag": "00000002-0002-0002-0002-000000000002",
+            "summarizeBy": "none",
+            "isHidden": true
+          }
+        ],
+        "partitions": [
+          {
+            "name": "ExcelFilePath",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = \"C:\\\\RideShareAnalytics\\\\RideShareAnalytics_Data.xlsx\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]",
+                "in",
+                "    Source"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Fact_Trips",
+        "lineageTag": "00000003-0003-0003-0003-000000000003",
+        "columns": [
+          {
+            "name": "TripKey",
+            "dataType": "int64",
+            "sourceColumn": "TripKey",
+            "lineageTag": "00000004-0004-0004-0004-000000000004",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "DateKey",
+            "dataType": "int64",
+            "sourceColumn": "DateKey",
+            "lineageTag": "00000005-0005-0005-0005-000000000005",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "DriverKey",
+            "dataType": "int64",
+            "sourceColumn": "DriverKey",
+            "lineageTag": "00000006-0006-0006-0006-000000000006",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "RiderKey",
+            "dataType": "int64",
+            "sourceColumn": "RiderKey",
+            "lineageTag": "00000007-0007-0007-0007-000000000007",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "LocationKey",
+            "dataType": "int64",
+            "sourceColumn": "LocationKey",
+            "lineageTag": "00000008-0008-0008-0008-000000000008",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "PromoKey",
+            "dataType": "int64",
+            "sourceColumn": "PromoKey",
+            "lineageTag": "00000009-0009-0009-0009-000000000009",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "HourOfDay",
+            "dataType": "int64",
+            "sourceColumn": "HourOfDay",
+            "lineageTag": "0000000a-000a-000a-000a-00000000000a",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Fare",
+            "dataType": "decimal",
+            "sourceColumn": "Fare",
+            "lineageTag": "0000000b-000b-000b-000b-00000000000b",
+            "summarizeBy": "sum",
+            "formatString": "₹#,##0.00"
+          },
+          {
+            "name": "DistanceKM",
+            "dataType": "double",
+            "sourceColumn": "DistanceKM",
+            "lineageTag": "0000000c-000c-000c-000c-00000000000c",
+            "summarizeBy": "sum",
+            "formatString": "#,##0.0"
+          },
+          {
+            "name": "DurationMin",
+            "dataType": "int64",
+            "sourceColumn": "DurationMin",
+            "lineageTag": "0000000d-000d-000d-000d-00000000000d",
+            "summarizeBy": "sum",
+            "formatString": "#,##0"
+          },
+          {
+            "name": "WaitTimeMin",
+            "dataType": "double",
+            "sourceColumn": "WaitTimeMin",
+            "lineageTag": "0000000e-000e-000e-000e-00000000000e",
+            "summarizeBy": "average",
+            "formatString": "#,##0.0"
+          },
+          {
+            "name": "Tip",
+            "dataType": "decimal",
+            "sourceColumn": "Tip",
+            "lineageTag": "0000000f-000f-000f-000f-00000000000f",
+            "summarizeBy": "sum",
+            "formatString": "₹#,##0.00"
+          },
+          {
+            "name": "SurgeMultiplier",
+            "dataType": "double",
+            "sourceColumn": "SurgeMultiplier",
+            "lineageTag": "00000010-0010-0010-0010-000000000010",
+            "summarizeBy": "average",
+            "formatString": "#,##0.0x"
+          },
+          {
+            "name": "Status",
+            "dataType": "string",
+            "sourceColumn": "Status",
+            "lineageTag": "00000011-0011-0011-0011-000000000011",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "CancellationReason",
+            "dataType": "string",
+            "sourceColumn": "CancellationReason",
+            "lineageTag": "00000012-0012-0012-0012-000000000012",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "PaymentMethod",
+            "dataType": "string",
+            "sourceColumn": "PaymentMethod",
+            "lineageTag": "00000013-0013-0013-0013-000000000013",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Fact_Trips",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(ExcelFilePath), null, true),",
+                "    Sheet = Source{[Item=\"Fact_Trips\",Kind=\"Sheet\"]}[Data],",
+                "    Headers = Table.PromoteHeaders(Sheet, [PromoteAllScalars=true]),",
+                "",
+                "    // Data cleaning: standardize PaymentMethod casing (~6% had inconsistent case)",
+                "    CleanPayment = Table.TransformColumns(Headers, {{\"PaymentMethod\", each ",
+                "        if Text.Lower(_) = \"upi\" then \"UPI\"",
+                "        else if Text.Lower(_) = \"cash\" then \"Cash\"",
+                "        else if Text.Lower(_) = \"card\" then \"Card\"",
+                "        else if Text.Lower(_) = \"wallet\" then \"Wallet\"",
+                "        else _, type text}}),",
+                "",
+                "    // Data cleaning: replace null tips with 0 for completed trips (~8% had missing tips)",
+                "    CleanTips = Table.ReplaceValue(CleanPayment, null, 0, Replacer.ReplaceValue, {\"Tip\"}),",
+                "",
+                "    Typed = Table.TransformColumnTypes(CleanTips, {",
+                "        {\"TripKey\", Int64.Type},",
+                "        {\"DateKey\", Int64.Type},",
+                "        {\"DriverKey\", Int64.Type},",
+                "        {\"RiderKey\", Int64.Type},",
+                "        {\"LocationKey\", Int64.Type},",
+                "        {\"PromoKey\", Int64.Type},",
+                "        {\"HourOfDay\", Int64.Type},",
+                "        {\"Fare\", Currency.Type},",
+                "        {\"DistanceKM\", type number},",
+                "        {\"DurationMin\", Int64.Type},",
+                "        {\"WaitTimeMin\", type number},",
+                "        {\"Tip\", Currency.Type},",
+                "        {\"SurgeMultiplier\", type number},",
+                "        {\"Status\", type text},",
+                "        {\"CancellationReason\", type text},",
+                "        {\"PaymentMethod\", type text}",
+                "    })",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_Driver",
+        "lineageTag": "00000014-0014-0014-0014-000000000014",
+        "columns": [
+          {
+            "name": "DriverKey",
+            "dataType": "int64",
+            "sourceColumn": "DriverKey",
+            "lineageTag": "00000015-0015-0015-0015-000000000015",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "DriverName",
+            "dataType": "string",
+            "sourceColumn": "DriverName",
+            "lineageTag": "00000016-0016-0016-0016-000000000016",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "VehicleType",
+            "dataType": "string",
+            "sourceColumn": "VehicleType",
+            "lineageTag": "00000017-0017-0017-0017-000000000017",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Rating",
+            "dataType": "double",
+            "sourceColumn": "Rating",
+            "lineageTag": "00000018-0018-0018-0018-000000000018",
+            "summarizeBy": "average",
+            "formatString": "#,##0.0"
+          },
+          {
+            "name": "JoinDate",
+            "dataType": "dateTime",
+            "sourceColumn": "JoinDate",
+            "lineageTag": "00000019-0019-0019-0019-000000000019",
+            "summarizeBy": "none",
+            "formatString": "Short Date"
+          },
+          {
+            "name": "HomeCity",
+            "dataType": "string",
+            "sourceColumn": "HomeCity",
+            "lineageTag": "0000001a-001a-001a-001a-00000000001a",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Dim_Driver",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(ExcelFilePath), null, true),",
+                "    Sheet = Source{[Item=\"Dim_Driver\",Kind=\"Sheet\"]}[Data],",
+                "    Headers = Table.PromoteHeaders(Sheet, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Headers, {",
+                "        {\"DriverKey\", Int64.Type},",
+                "        {\"DriverName\", type text},",
+                "        {\"VehicleType\", type text},",
+                "        {\"Rating\", type number},",
+                "        {\"JoinDate\", type date},",
+                "        {\"HomeCity\", type text}",
+                "    })",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_Rider",
+        "lineageTag": "0000001b-001b-001b-001b-00000000001b",
+        "columns": [
+          {
+            "name": "RiderKey",
+            "dataType": "int64",
+            "sourceColumn": "RiderKey",
+            "lineageTag": "0000001c-001c-001c-001c-00000000001c",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "RiderName",
+            "dataType": "string",
+            "sourceColumn": "RiderName",
+            "lineageTag": "0000001d-001d-001d-001d-00000000001d",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "SignupDate",
+            "dataType": "dateTime",
+            "sourceColumn": "SignupDate",
+            "lineageTag": "0000001e-001e-001e-001e-00000000001e",
+            "summarizeBy": "none",
+            "formatString": "Short Date"
+          },
+          {
+            "name": "LoyaltyTier",
+            "dataType": "string",
+            "sourceColumn": "LoyaltyTier",
+            "lineageTag": "0000001f-001f-001f-001f-00000000001f",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Dim_Rider",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(ExcelFilePath), null, true),",
+                "    Sheet = Source{[Item=\"Dim_Rider\",Kind=\"Sheet\"]}[Data],",
+                "    Headers = Table.PromoteHeaders(Sheet, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Headers, {",
+                "        {\"RiderKey\", Int64.Type},",
+                "        {\"RiderName\", type text},",
+                "        {\"SignupDate\", type date},",
+                "        {\"LoyaltyTier\", type text}",
+                "    })",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_Location",
+        "lineageTag": "00000020-0020-0020-0020-000000000020",
+        "columns": [
+          {
+            "name": "LocationKey",
+            "dataType": "int64",
+            "sourceColumn": "LocationKey",
+            "lineageTag": "00000021-0021-0021-0021-000000000021",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "City",
+            "dataType": "string",
+            "sourceColumn": "City",
+            "lineageTag": "00000022-0022-0022-0022-000000000022",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Zone",
+            "dataType": "string",
+            "sourceColumn": "Zone",
+            "lineageTag": "00000023-0023-0023-0023-000000000023",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Dim_Location",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(ExcelFilePath), null, true),",
+                "    Sheet = Source{[Item=\"Dim_Location\",Kind=\"Sheet\"]}[Data],",
+                "    Headers = Table.PromoteHeaders(Sheet, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Headers, {",
+                "        {\"LocationKey\", Int64.Type},",
+                "        {\"City\", type text},",
+                "        {\"Zone\", type text}",
+                "    })",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_Date",
+        "lineageTag": "00000024-0024-0024-0024-000000000024",
+        "dataCategory": "Time",
+        "isHidden": false,
+        "columns": [
+          {
+            "name": "DateKey",
+            "dataType": "int64",
+            "sourceColumn": "DateKey",
+            "lineageTag": "00000025-0025-0025-0025-000000000025",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "Date",
+            "dataType": "dateTime",
+            "sourceColumn": "Date",
+            "lineageTag": "00000026-0026-0026-0026-000000000026",
+            "summarizeBy": "none",
+            "isKey": true,
+            "formatString": "Short Date"
+          },
+          {
+            "name": "Year",
+            "dataType": "int64",
+            "sourceColumn": "Year",
+            "lineageTag": "00000027-0027-0027-0027-000000000027",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Quarter",
+            "dataType": "string",
+            "sourceColumn": "Quarter",
+            "lineageTag": "00000028-0028-0028-0028-000000000028",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "MonthName",
+            "dataType": "string",
+            "sourceColumn": "MonthName",
+            "lineageTag": "00000029-0029-0029-0029-000000000029",
+            "summarizeBy": "none",
+            "sortByColumn": "MonthNum"
+          },
+          {
+            "name": "MonthNum",
+            "dataType": "int64",
+            "sourceColumn": "MonthNum",
+            "lineageTag": "0000002a-002a-002a-002a-00000000002a",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Day",
+            "dataType": "int64",
+            "sourceColumn": "Day",
+            "lineageTag": "0000002b-002b-002b-002b-00000000002b",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "DayOfWeek",
+            "dataType": "string",
+            "sourceColumn": "DayOfWeek",
+            "lineageTag": "0000002c-002c-002c-002c-00000000002c",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "WeekNum",
+            "dataType": "int64",
+            "sourceColumn": "WeekNum",
+            "lineageTag": "0000002d-002d-002d-002d-00000000002d",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "IsWeekend",
+            "dataType": "boolean",
+            "sourceColumn": "IsWeekend",
+            "lineageTag": "0000002e-002e-002e-002e-00000000002e",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Dim_Date",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(ExcelFilePath), null, true),",
+                "    Sheet = Source{[Item=\"Dim_Date\",Kind=\"Sheet\"]}[Data],",
+                "    Headers = Table.PromoteHeaders(Sheet, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Headers, {",
+                "        {\"DateKey\", Int64.Type},",
+                "        {\"Date\", type date},",
+                "        {\"Year\", Int64.Type},",
+                "        {\"Quarter\", type text},",
+                "        {\"MonthName\", type text},",
+                "        {\"MonthNum\", Int64.Type},",
+                "        {\"Day\", Int64.Type},",
+                "        {\"DayOfWeek\", type text},",
+                "        {\"WeekNum\", Int64.Type},",
+                "        {\"IsWeekend\", type logical}",
+                "    })",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Dim_Promo",
+        "lineageTag": "0000002f-002f-002f-002f-00000000002f",
+        "columns": [
+          {
+            "name": "PromoKey",
+            "dataType": "int64",
+            "sourceColumn": "PromoKey",
+            "lineageTag": "00000030-0030-0030-0030-000000000030",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "PromoCode",
+            "dataType": "string",
+            "sourceColumn": "PromoCode",
+            "lineageTag": "00000031-0031-0031-0031-000000000031",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "CampaignName",
+            "dataType": "string",
+            "sourceColumn": "CampaignName",
+            "lineageTag": "00000032-0032-0032-0032-000000000032",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "DiscountPct",
+            "dataType": "int64",
+            "sourceColumn": "DiscountPct",
+            "lineageTag": "00000033-0033-0033-0033-000000000033",
+            "summarizeBy": "average",
+            "formatString": "#,##0'%'"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Dim_Promo",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(ExcelFilePath), null, true),",
+                "    Sheet = Source{[Item=\"Dim_Promo\",Kind=\"Sheet\"]}[Data],",
+                "    Headers = Table.PromoteHeaders(Sheet, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Headers, {",
+                "        {\"PromoKey\", Int64.Type},",
+                "        {\"PromoCode\", type text},",
+                "        {\"CampaignName\", type text},",
+                "        {\"DiscountPct\", Int64.Type}",
+                "    })",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "_Measures",
+        "lineageTag": "00000034-0034-0034-0034-000000000034",
+        "isHidden": false,
+        "columns": [
+          {
+            "name": "MeasureHelper",
+            "dataType": "int64",
+            "sourceColumn": "MeasureHelper",
+            "lineageTag": "00000035-0035-0035-0035-000000000035",
+            "summarizeBy": "none",
+            "isHidden": true
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Trips",
+            "expression": "COUNTROWS(Fact_Trips)",
+            "formatString": "#,##0",
+            "displayFolder": "Core Metrics",
+            "lineageTag": "00000036-0036-0036-0036-000000000036"
+          },
+          {
+            "name": "Total Revenue",
+            "expression": [
+              "CALCULATE(",
+              "    SUM(Fact_Trips[Fare]),",
+              "    Fact_Trips[Status] = \"Completed\"",
+              ")"
+            ],
+            "formatString": "₹#,##0",
+            "displayFolder": "Core Metrics",
+            "lineageTag": "00000037-0037-0037-0037-000000000037"
+          },
+          {
+            "name": "Total Tips",
+            "expression": [
+              "CALCULATE(",
+              "    SUM(Fact_Trips[Tip]),",
+              "    Fact_Trips[Status] = \"Completed\"",
+              ")"
+            ],
+            "formatString": "₹#,##0",
+            "displayFolder": "Core Metrics",
+            "lineageTag": "00000038-0038-0038-0038-000000000038"
+          },
+          {
+            "name": "Avg Fare",
+            "expression": [
+              "CALCULATE(",
+              "    AVERAGE(Fact_Trips[Fare]),",
+              "    Fact_Trips[Status] = \"Completed\"",
+              ")"
+            ],
+            "formatString": "₹#,##0.00",
+            "displayFolder": "Core Metrics",
+            "lineageTag": "00000039-0039-0039-0039-000000000039"
+          },
+          {
+            "name": "Cancellation Rate %",
+            "expression": [
+              "VAR TotalTrips = COUNTROWS(Fact_Trips)",
+              "VAR CancelledTrips =",
+              "    CALCULATE(",
+              "        COUNTROWS(Fact_Trips),",
+              "        Fact_Trips[Status] = \"Cancelled\"",
+              "    )",
+              "RETURN",
+              "    DIVIDE(CancelledTrips, TotalTrips, 0)"
+            ],
+            "formatString": "0.0%",
+            "displayFolder": "Core Metrics",
+            "lineageTag": "0000003a-003a-003a-003a-00000000003a"
+          },
+          {
+            "name": "Completed Trips",
+            "expression": [
+              "CALCULATE(",
+              "    COUNTROWS(Fact_Trips),",
+              "    Fact_Trips[Status] = \"Completed\"",
+              ")"
+            ],
+            "formatString": "#,##0",
+            "displayFolder": "Core Metrics",
+            "lineageTag": "0000003b-003b-003b-003b-00000000003b"
+          },
+          {
+            "name": "Cancelled Trips",
+            "expression": [
+              "CALCULATE(",
+              "    COUNTROWS(Fact_Trips),",
+              "    Fact_Trips[Status] = \"Cancelled\"",
+              ")"
+            ],
+            "formatString": "#,##0",
+            "displayFolder": "Core Metrics",
+            "lineageTag": "0000003c-003c-003c-003c-00000000003c"
+          },
+          {
+            "name": "Revenue per KM",
+            "expression": [
+              "VAR TotalRev = [Total Revenue]",
+              "VAR TotalDist =",
+              "    CALCULATE(",
+              "        SUM(Fact_Trips[DistanceKM]),",
+              "        Fact_Trips[Status] = \"Completed\"",
+              "    )",
+              "RETURN",
+              "    DIVIDE(TotalRev, TotalDist, 0)"
+            ],
+            "formatString": "₹#,##0.00",
+            "displayFolder": "Efficiency",
+            "lineageTag": "0000003d-003d-003d-003d-00000000003d"
+          },
+          {
+            "name": "Avg Wait Time",
+            "expression": "AVERAGE(Fact_Trips[WaitTimeMin])",
+            "formatString": "#,##0.0 \" min\"",
+            "displayFolder": "Efficiency",
+            "lineageTag": "0000003e-003e-003e-003e-00000000003e"
+          },
+          {
+            "name": "Revenue per Driver",
+            "expression": [
+              "DIVIDE(",
+              "    [Total Revenue],",
+              "    DISTINCTCOUNT(Fact_Trips[DriverKey]),",
+              "    0",
+              ")"
+            ],
+            "formatString": "₹#,##0",
+            "displayFolder": "Efficiency",
+            "lineageTag": "0000003f-003f-003f-003f-00000000003f"
+          },
+          {
+            "name": "MTD Revenue",
+            "expression": [
+              "CALCULATE(",
+              "    [Total Revenue],",
+              "    DATESMTD(Dim_Date[Date])",
+              ")"
+            ],
+            "formatString": "₹#,##0",
+            "displayFolder": "Time Intelligence",
+            "lineageTag": "00000040-0040-0040-0040-000000000040"
+          },
+          {
+            "name": "YoY Growth %",
+            "expression": [
+              "VAR CurrentRev = [Total Revenue]",
+              "VAR PriorYearRev =",
+              "    CALCULATE(",
+              "        [Total Revenue],",
+              "        SAMEPERIODLASTYEAR(Dim_Date[Date])",
+              "    )",
+              "RETURN",
+              "    DIVIDE(",
+              "        CurrentRev - PriorYearRev,",
+              "        PriorYearRev,",
+              "        BLANK()",
+              "    )"
+            ],
+            "formatString": "0.0%",
+            "displayFolder": "Time Intelligence",
+            "lineageTag": "00000041-0041-0041-0041-000000000041"
+          },
+          {
+            "name": "Rolling 7-Day Avg Trips",
+            "expression": [
+              "CALCULATE(",
+              "    DIVIDE(",
+              "        COUNTROWS(Fact_Trips),",
+              "        7,",
+              "        0",
+              "    ),",
+              "    DATESINPERIOD(",
+              "        Dim_Date[Date],",
+              "        MAX(Dim_Date[Date]),",
+              "        -7,",
+              "        DAY",
+              "    )",
+              ")"
+            ],
+            "formatString": "#,##0",
+            "displayFolder": "Time Intelligence",
+            "lineageTag": "00000042-0042-0042-0042-000000000042"
+          },
+          {
+            "name": "Driver Revenue Rank",
+            "expression": [
+              "IF(",
+              "    HASONEVALUE(Dim_Driver[DriverName]),",
+              "    RANKX(",
+              "        ALL(Dim_Driver[DriverName]),",
+              "        [Total Revenue],",
+              "        ,",
+              "        DESC,",
+              "        Dense",
+              "    )",
+              ")"
+            ],
+            "formatString": "#,##0",
+            "displayFolder": "Ranking",
+            "lineageTag": "00000043-0043-0043-0043-000000000043"
+          },
+          {
+            "name": "Driver Rank in City",
+            "expression": [
+              "IF(",
+              "    HASONEVALUE(Dim_Driver[DriverName]),",
+              "    RANKX(",
+              "        ALLEXCEPT(Dim_Driver, Dim_Driver[HomeCity]),",
+              "        [Total Revenue],",
+              "        ,",
+              "        DESC,",
+              "        Dense",
+              "    )",
+              ")"
+            ],
+            "formatString": "#,##0",
+            "displayFolder": "Ranking",
+            "lineageTag": "00000044-0044-0044-0044-000000000044"
+          },
+          {
+            "name": "Avg Surge at Cancellation",
+            "expression": [
+              "CALCULATE(",
+              "    AVERAGE(Fact_Trips[SurgeMultiplier]),",
+              "    Fact_Trips[Status] = \"Cancelled\"",
+              ")"
+            ],
+            "formatString": "#,##0.00x",
+            "displayFolder": "Core Metrics",
+            "lineageTag": "00000045-0045-0045-0045-000000000045"
+          },
+          {
+            "name": "Promo Trip Count",
+            "expression": [
+              "CALCULATE(",
+              "    COUNTROWS(Fact_Trips),",
+              "    Fact_Trips[PromoKey] <> 0",
+              ")"
+            ],
+            "formatString": "#,##0",
+            "displayFolder": "Promotions",
+            "lineageTag": "00000046-0046-0046-0046-000000000046"
+          },
+          {
+            "name": "Promo Revenue",
+            "expression": [
+              "CALCULATE(",
+              "    [Total Revenue],",
+              "    Fact_Trips[PromoKey] <> 0",
+              ")"
+            ],
+            "formatString": "₹#,##0",
+            "displayFolder": "Promotions",
+            "lineageTag": "00000047-0047-0047-0047-000000000047"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "_Measures",
+            "mode": "import",
+            "source": {
+              "type": "calculated",
+              "expression": "ROW(\"MeasureHelper\", 1)"
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "Fact_Trips_to_Dim_Date",
+        "fromTable": "Fact_Trips",
+        "fromColumn": "DateKey",
+        "toTable": "Dim_Date",
+        "toColumn": "DateKey",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "Fact_Trips_to_Dim_Driver",
+        "fromTable": "Fact_Trips",
+        "fromColumn": "DriverKey",
+        "toTable": "Dim_Driver",
+        "toColumn": "DriverKey",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "Fact_Trips_to_Dim_Rider",
+        "fromTable": "Fact_Trips",
+        "fromColumn": "RiderKey",
+        "toTable": "Dim_Rider",
+        "toColumn": "RiderKey",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "Fact_Trips_to_Dim_Location",
+        "fromTable": "Fact_Trips",
+        "fromColumn": "LocationKey",
+        "toTable": "Dim_Location",
+        "toColumn": "LocationKey",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "Fact_Trips_to_Dim_Promo",
+        "fromTable": "Fact_Trips",
+        "fromColumn": "PromoKey",
+        "toTable": "Dim_Promo",
+        "toColumn": "PromoKey",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      }
+    ],
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"ExcelFilePath\",\"Fact_Trips\",\"Dim_Driver\",\"Dim_Rider\",\"Dim_Location\",\"Dim_Date\",\"Dim_Promo\"]"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.138.1004.0"
+      },
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "1"
+      }
+    ]
+  }
+}
