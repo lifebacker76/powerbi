@@ -1,0 +1,607 @@
+{
+  "compatibilityLevel": 1567,
+  "model": {
+    "culture": "en-US",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "tables": [
+      {
+        "name": "Sales",
+        "lineageTag": "a0000001-0001-0001-0001-000000000001",
+        "columns": [
+          {
+            "name": "OrderID",
+            "dataType": "string",
+            "sourceColumn": "OrderID",
+            "lineageTag": "b0000001-0001-0001-0001-000000000001",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "OrderDate",
+            "dataType": "dateTime",
+            "sourceColumn": "OrderDate",
+            "formatString": "Short Date",
+            "lineageTag": "b0000001-0001-0001-0001-000000000002",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "CustomerID",
+            "dataType": "string",
+            "sourceColumn": "CustomerID",
+            "lineageTag": "b0000001-0001-0001-0001-000000000003",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ProductID",
+            "dataType": "string",
+            "sourceColumn": "ProductID",
+            "lineageTag": "b0000001-0001-0001-0001-000000000004",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "StoreID",
+            "dataType": "string",
+            "sourceColumn": "StoreID",
+            "lineageTag": "b0000001-0001-0001-0001-000000000005",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Channel",
+            "dataType": "string",
+            "sourceColumn": "Channel",
+            "lineageTag": "b0000001-0001-0001-0001-000000000006",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Quantity",
+            "dataType": "int64",
+            "sourceColumn": "Quantity",
+            "formatString": "#,##0",
+            "lineageTag": "b0000001-0001-0001-0001-000000000007",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "UnitPrice",
+            "dataType": "decimal",
+            "sourceColumn": "UnitPrice",
+            "formatString": "$#,##0.00",
+            "lineageTag": "b0000001-0001-0001-0001-000000000008",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Discount",
+            "dataType": "double",
+            "sourceColumn": "Discount",
+            "formatString": "0.00%",
+            "lineageTag": "b0000001-0001-0001-0001-000000000009",
+            "summarizeBy": "average"
+          },
+          {
+            "name": "TotalAmount",
+            "dataType": "decimal",
+            "sourceColumn": "TotalAmount",
+            "formatString": "$#,##0.00",
+            "lineageTag": "b0000001-0001-0001-0001-000000000010",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Cost",
+            "dataType": "decimal",
+            "sourceColumn": "Cost",
+            "formatString": "$#,##0.00",
+            "lineageTag": "b0000001-0001-0001-0001-000000000011",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Profit",
+            "dataType": "decimal",
+            "sourceColumn": "Profit",
+            "formatString": "$#,##0.00",
+            "lineageTag": "b0000001-0001-0001-0001-000000000012",
+            "summarizeBy": "sum"
+          }
+        ],
+        "measures": [
+          {
+            "name": "Total Sales",
+            "expression": "SUM(Sales[TotalAmount])",
+            "formatString": "$#,##0.00",
+            "lineageTag": "c0000001-0001-0001-0001-000000000001"
+          },
+          {
+            "name": "Total Profit",
+            "expression": "SUM(Sales[Profit])",
+            "formatString": "$#,##0.00",
+            "lineageTag": "c0000001-0001-0001-0001-000000000002"
+          },
+          {
+            "name": "Total Quantity",
+            "expression": "SUM(Sales[Quantity])",
+            "formatString": "#,##0",
+            "lineageTag": "c0000001-0001-0001-0001-000000000003"
+          },
+          {
+            "name": "Profit Margin",
+            "expression": [
+              "DIVIDE(",
+              "    [Total Profit],",
+              "    [Total Sales],",
+              "    0",
+              ")"
+            ],
+            "formatString": "0.0%",
+            "lineageTag": "c0000001-0001-0001-0001-000000000004"
+          },
+          {
+            "name": "Avg Order Value",
+            "expression": [
+              "DIVIDE(",
+              "    [Total Sales],",
+              "    DISTINCTCOUNT(Sales[OrderID]),",
+              "    0",
+              ")"
+            ],
+            "formatString": "$#,##0.00",
+            "lineageTag": "c0000001-0001-0001-0001-000000000005"
+          },
+          {
+            "name": "Order Count",
+            "expression": "DISTINCTCOUNT(Sales[OrderID])",
+            "formatString": "#,##0",
+            "lineageTag": "c0000001-0001-0001-0001-000000000006"
+          },
+          {
+            "name": "YoY Sales Growth",
+            "expression": [
+              "VAR CurrentSales = [Total Sales]",
+              "VAR PriorYearSales =",
+              "    CALCULATE(",
+              "        [Total Sales],",
+              "        SAMEPERIODLASTYEAR(Calendar[Date])",
+              "    )",
+              "RETURN",
+              "    DIVIDE(",
+              "        CurrentSales - PriorYearSales,",
+              "        PriorYearSales,",
+              "        BLANK()",
+              "    )"
+            ],
+            "formatString": "0.0%",
+            "lineageTag": "c0000001-0001-0001-0001-000000000007"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Sales",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(ExcelFilePath), null, true),",
+                "    Sales_Sheet = Source{[Item=\"Sales\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Sales_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{",
+                "        {\"OrderID\", type text},",
+                "        {\"OrderDate\", type date},",
+                "        {\"CustomerID\", type text},",
+                "        {\"ProductID\", type text},",
+                "        {\"StoreID\", type text},",
+                "        {\"Channel\", type text},",
+                "        {\"Quantity\", Int64.Type},",
+                "        {\"UnitPrice\", Currency.Type},",
+                "        {\"Discount\", type number},",
+                "        {\"TotalAmount\", Currency.Type},",
+                "        {\"Cost\", Currency.Type},",
+                "        {\"Profit\", Currency.Type}",
+                "    })",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Products",
+        "lineageTag": "a0000002-0002-0002-0002-000000000001",
+        "columns": [
+          {
+            "name": "ProductID",
+            "dataType": "string",
+            "sourceColumn": "ProductID",
+            "lineageTag": "b0000002-0002-0002-0002-000000000001",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ProductName",
+            "dataType": "string",
+            "sourceColumn": "ProductName",
+            "lineageTag": "b0000002-0002-0002-0002-000000000002",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Category",
+            "dataType": "string",
+            "sourceColumn": "Category",
+            "lineageTag": "b0000002-0002-0002-0002-000000000003",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "SubCategory",
+            "dataType": "string",
+            "sourceColumn": "SubCategory",
+            "lineageTag": "b0000002-0002-0002-0002-000000000004",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "UnitCost",
+            "dataType": "decimal",
+            "sourceColumn": "UnitCost",
+            "formatString": "$#,##0.00",
+            "lineageTag": "b0000002-0002-0002-0002-000000000005",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "UnitPrice",
+            "dataType": "decimal",
+            "sourceColumn": "UnitPrice",
+            "formatString": "$#,##0.00",
+            "lineageTag": "b0000002-0002-0002-0002-000000000006",
+            "summarizeBy": "sum"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Products",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(ExcelFilePath), null, true),",
+                "    Products_Sheet = Source{[Item=\"Products\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Products_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{",
+                "        {\"ProductID\", type text},",
+                "        {\"ProductName\", type text},",
+                "        {\"Category\", type text},",
+                "        {\"SubCategory\", type text},",
+                "        {\"UnitCost\", Currency.Type},",
+                "        {\"UnitPrice\", Currency.Type}",
+                "    })",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Customers",
+        "lineageTag": "a0000003-0003-0003-0003-000000000001",
+        "columns": [
+          {
+            "name": "CustomerID",
+            "dataType": "string",
+            "sourceColumn": "CustomerID",
+            "lineageTag": "b0000003-0003-0003-0003-000000000001",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "FirstName",
+            "dataType": "string",
+            "sourceColumn": "FirstName",
+            "lineageTag": "b0000003-0003-0003-0003-000000000002",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "LastName",
+            "dataType": "string",
+            "sourceColumn": "LastName",
+            "lineageTag": "b0000003-0003-0003-0003-000000000003",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Email",
+            "dataType": "string",
+            "sourceColumn": "Email",
+            "lineageTag": "b0000003-0003-0003-0003-000000000004",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Segment",
+            "dataType": "string",
+            "sourceColumn": "Segment",
+            "lineageTag": "b0000003-0003-0003-0003-000000000005",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "City",
+            "dataType": "string",
+            "sourceColumn": "City",
+            "lineageTag": "b0000003-0003-0003-0003-000000000006",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "State",
+            "dataType": "string",
+            "sourceColumn": "State",
+            "lineageTag": "b0000003-0003-0003-0003-000000000007",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Customers",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(ExcelFilePath), null, true),",
+                "    Customers_Sheet = Source{[Item=\"Customers\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Customers_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{",
+                "        {\"CustomerID\", type text},",
+                "        {\"FirstName\", type text},",
+                "        {\"LastName\", type text},",
+                "        {\"Email\", type text},",
+                "        {\"Segment\", type text},",
+                "        {\"City\", type text},",
+                "        {\"State\", type text}",
+                "    })",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Stores",
+        "lineageTag": "a0000004-0004-0004-0004-000000000001",
+        "columns": [
+          {
+            "name": "StoreID",
+            "dataType": "string",
+            "sourceColumn": "StoreID",
+            "lineageTag": "b0000004-0004-0004-0004-000000000001",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "StoreName",
+            "dataType": "string",
+            "sourceColumn": "StoreName",
+            "lineageTag": "b0000004-0004-0004-0004-000000000002",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "City",
+            "dataType": "string",
+            "sourceColumn": "City",
+            "lineageTag": "b0000004-0004-0004-0004-000000000003",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "State",
+            "dataType": "string",
+            "sourceColumn": "State",
+            "lineageTag": "b0000004-0004-0004-0004-000000000004",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Region",
+            "dataType": "string",
+            "sourceColumn": "Region",
+            "lineageTag": "b0000004-0004-0004-0004-000000000005",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Stores",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(ExcelFilePath), null, true),",
+                "    Stores_Sheet = Source{[Item=\"Stores\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Stores_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{",
+                "        {\"StoreID\", type text},",
+                "        {\"StoreName\", type text},",
+                "        {\"City\", type text},",
+                "        {\"State\", type text},",
+                "        {\"Region\", type text}",
+                "    })",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Calendar",
+        "lineageTag": "a0000005-0005-0005-0005-000000000001",
+        "dataCategory": "Time",
+        "columns": [
+          {
+            "name": "Date",
+            "dataType": "dateTime",
+            "sourceColumn": "Date",
+            "isKey": true,
+            "formatString": "Short Date",
+            "lineageTag": "b0000005-0005-0005-0005-000000000001",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Year",
+            "dataType": "int64",
+            "sourceColumn": "Year",
+            "lineageTag": "b0000005-0005-0005-0005-000000000002",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Quarter",
+            "dataType": "string",
+            "sourceColumn": "Quarter",
+            "lineageTag": "b0000005-0005-0005-0005-000000000003",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Month",
+            "dataType": "string",
+            "sourceColumn": "Month",
+            "lineageTag": "b0000005-0005-0005-0005-000000000004",
+            "summarizeBy": "none",
+            "sortByColumn": "MonthNum"
+          },
+          {
+            "name": "MonthNum",
+            "dataType": "int64",
+            "sourceColumn": "MonthNum",
+            "lineageTag": "b0000005-0005-0005-0005-000000000005",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Day",
+            "dataType": "int64",
+            "sourceColumn": "Day",
+            "lineageTag": "b0000005-0005-0005-0005-000000000006",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "DayOfWeek",
+            "dataType": "string",
+            "sourceColumn": "DayOfWeek",
+            "lineageTag": "b0000005-0005-0005-0005-000000000007",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "IsWeekend",
+            "dataType": "boolean",
+            "sourceColumn": "IsWeekend",
+            "lineageTag": "b0000005-0005-0005-0005-000000000008",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Calendar",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Excel.Workbook(File.Contents(ExcelFilePath), null, true),",
+                "    Calendar_Sheet = Source{[Item=\"Calendar\",Kind=\"Sheet\"]}[Data],",
+                "    #\"Promoted Headers\" = Table.PromoteHeaders(Calendar_Sheet, [PromoteAllScalars=true]),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{",
+                "        {\"Date\", type date},",
+                "        {\"Year\", Int64.Type},",
+                "        {\"Quarter\", type text},",
+                "        {\"Month\", type text},",
+                "        {\"MonthNum\", Int64.Type},",
+                "        {\"Day\", Int64.Type},",
+                "        {\"DayOfWeek\", type text},",
+                "        {\"IsWeekend\", type logical}",
+                "    })",
+                "in",
+                "    #\"Changed Type\""
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "ExcelFilePath",
+        "lineageTag": "a0000006-0006-0006-0006-000000000001",
+        "columns": [
+          {
+            "name": "ExcelFilePath",
+            "dataType": "string",
+            "sourceColumn": "ExcelFilePath",
+            "lineageTag": "b0000006-0006-0006-0006-000000000001",
+            "summarizeBy": "none",
+            "isHidden": true
+          }
+        ],
+        "isHidden": true,
+        "partitions": [
+          {
+            "name": "ExcelFilePath",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = \"C:\\PowerBI_Sample_Data.xlsx\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]",
+                "in",
+                "    Source"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "Sales_to_Customers",
+        "fromTable": "Sales",
+        "fromColumn": "CustomerID",
+        "toTable": "Customers",
+        "toColumn": "CustomerID",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "Sales_to_Products",
+        "fromTable": "Sales",
+        "fromColumn": "ProductID",
+        "toTable": "Products",
+        "toColumn": "ProductID",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "Sales_to_Stores",
+        "fromTable": "Sales",
+        "fromColumn": "StoreID",
+        "toTable": "Stores",
+        "toColumn": "StoreID",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "Sales_to_Calendar",
+        "fromTable": "Sales",
+        "fromColumn": "OrderDate",
+        "toTable": "Calendar",
+        "toColumn": "Date",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      }
+    ],
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"ExcelFilePath\",\"Sales\",\"Products\",\"Customers\",\"Stores\",\"Calendar\"]"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.138.1004.0"
+      },
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "1"
+      }
+    ]
+  }
+}
